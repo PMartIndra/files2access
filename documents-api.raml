@@ -1,0 +1,44 @@
+#%RAML 1.0
+
+title: ITECBAN Documents API
+description: Api de consulta de documentacion
+baseUri: http://itecban.indra.es
+version: v1
+securedBy:
+  - oauth_2
+
+mediaType: application/json
+protocols:
+  - HTTPS
+
+
+documentation:
+  - title: Descripción
+    content: |
+      El API de Documents facilita el acceso a los documentos del usuario almacenados en ITECBAN.
+
+
+uses:
+  resourceTypes: resourceTypes/resourceTypes.raml
+
+securitySchemes:
+ oauth_2: !include securitySchemes/security-oauth2.raml
+
+
+/documents/{documentId}:
+  type: resourceTypes.base
+  description: Documento del repositorio documental del usuario.
+  get:
+    description: Descarga del contenido del fichero
+    responses:
+      200:
+        body:
+          application/pdf:
+            example: !include examples/accounts/movements/documents/32190479.pdf
+      404:
+        description: No se encuentra el recurso <<resourcePathName|!singularize>>
+        body:
+          application/json:
+            properties:
+              result: structure.Result
+            example: !include examples/errors/404.json
